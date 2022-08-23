@@ -9,7 +9,7 @@ import { OrdersContext } from "../../contexts/OrderContext";
 import { CoffeeSelection } from "./components/CoffeeSelection";
 
 //Icons
-import { Bank, CreditCard, CurrencyDollar, MapPinLine, Money } from "phosphor-react";
+import { Bank, Check, CreditCard, CurrencyDollar, MapPinLine, Money } from "phosphor-react";
 
 //Styled Components
 import { AdressPaymentOrderContainer, AdressTitleContainer, BagForm, BoxCEP, BoxCity, BoxComplement, BoxDistrict, BoxNumber, BoxState, BoxStreet, ConfirmOrderButton, Container, DistrictContainer, InputPaymentOptions, ItensAndFreight, LabelPaymentOptions, NumberContainer, OrderContainer, PaymentOptionsContainer, PaymentTitleContainer, PriceTotalBox, TitleLine, TotalContainer } from "./styles";
@@ -22,7 +22,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { object } from "yup";
 
-//Interface
+//SweetAlert
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+//Interfaces
 interface CepObjectType {
   cepForm: string;
   logradouro: string;
@@ -32,6 +36,12 @@ interface CepObjectType {
   cidade: string; 
   estado: string;
   payment: string;
+  coffeeBag: CoffeeBagType[]
+}
+
+interface CoffeeBagType {
+  name: string;
+  quantity: number
 }
 
 
@@ -46,15 +56,12 @@ const OrderFormValidationSchema = object({
   payment: yup.string().required("Escolha uma opção de pagamento")
 })
 
-
-//mutation = criar, alterar ou deletar dados do GraphCMS
+//Mutation
 const CREATE_ORDER_MUTATION = gql`
-  mutation CreateOrder($cep: String!, $logradouro: String!, $bairro: String!, $cidade: String!, $estado: String!, $numero: Int!, $payment: String!, $complemento: String){
+mutation CreateOrder ($cep: String!, $logradouro: String!, $bairro: String!, $cidade: String!, $estado: String!, $payment: String!, $numero: Int!, $name: String!, $quantity: Int!) {
   createOrder(
-    data: {cep: $cep, logradouro: $logradouro, bairro: $bairro, cidade: $cidade, estado: $estado, payment: $payment, numero: $numero, complemento:  $complemento}
-  ) {
-    id
-  }
+    data: {cep: $cep, logradouro: $logradouro, bairro: $bairro, cidade: $cidade, estado: $estado, payment: $payment, numero: $numero, coffeeBag: {create: {name: $name, quantity: $quantity}}}
+  )
 }
 `
 
@@ -62,7 +69,7 @@ const CREATE_ORDER_MUTATION = gql`
 export function Bag() {
 
   //Context
-  const { cartOrders } = useContext(OrdersContext)
+  const { cartOrders, setContextCartOrders } = useContext(OrdersContext)
 
   //useMutation é um hook  do Apollo
   const [createOrder] = useMutation(CREATE_ORDER_MUTATION)
@@ -70,7 +77,11 @@ export function Bag() {
 
   //Function Submit Form  
 function submitForm(info: CepObjectType) {
-    
+
+  const MySwal = withReactContent(Swal);
+
+  if (cartOrders.length >= 1) {
+
     createOrder({
       variables:{
         cep: info.cepForm, 
@@ -80,14 +91,41 @@ function submitForm(info: CepObjectType) {
         estado: info.estado, 
         payment: info.payment, 
         numero: info.numero, 
-        complemento: info.complemento
-      }
-    })
+        complemento: info.complemento,
+      
+        coffeeBag:
+          cartOrders.map((order)=>{
+            return {
+              coffeeRequest: {
+                name: order.tag,
+                quantity: order.quantity
+              }   
 
-    reset();
-    
+            }
+        })
+      }
+
+  })
+
+  
+  reset();
+
+  setContextCartOrders([]);
+
+  MySwal.fire(<h4> Pedido realizado com sucesso! <Check size={30}  weight="bold"/></h4>)
+
+  }
+
+  else {
+
+    MySwal.fire(<p>Escolha seu café</p>)
+
+  }
+  
+
 }
   
+
 
   //useForm and Yup Schema Validation
   const { register, setValue, handleSubmit, formState:{errors}, clearErrors, reset } = useForm<CepObjectType>({resolver: yupResolver(OrderFormValidationSchema)});
