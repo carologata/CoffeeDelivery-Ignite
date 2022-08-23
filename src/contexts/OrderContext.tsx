@@ -30,29 +30,6 @@ interface CycleChildrenProps {
 
 export function OrdersContextProvider({children}:CycleChildrenProps) {
 
-  //DATA TO TEST
-  // const coffeeMenu = [
-  //   { 
-  //     id: "1",
-  //     tag: "Expresso Tradicional",
-  //     types: ["TRADICIONAL"],
-  //     description: "O tradicional café feito com água quente e grãos moídos",
-  //     image: "../../../public/Expresso.png",
-  //     price: 9.90,
-  //     quantity: 0
-  //   },
-  //   {
-  //     id: "2",
-  //     tag: "Café com Leite",
-  //     types: ["TRADICIONAL", "COM LEITE"],
-  //     description: "Meio a meio de expresso tradicional com leite vaporizado",
-  //     image: "../../../public/Type=Café com Leite.png",
-  //     price: 9.90,
-  //     quantity: 0
-  //   }
-  // ]
-
-
   //Use State
   const [cartOrders, setCartOrders] = useState<CoffeeMenuType[]>([])
 

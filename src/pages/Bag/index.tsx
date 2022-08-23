@@ -12,7 +12,7 @@ import { CoffeeSelection } from "./components/CoffeeSelection";
 import { Bank, Check, CreditCard, CurrencyDollar, MapPinLine, Money } from "phosphor-react";
 
 //Styled Components
-import { AdressPaymentOrderContainer, AdressTitleContainer, BagForm, BoxCEP, BoxCity, BoxComplement, BoxDistrict, BoxNumber, BoxState, BoxStreet, ConfirmOrderButton, Container, DistrictContainer, InputPaymentOptions, ItensAndFreight, LabelPaymentOptions, NumberContainer, OrderContainer, PaymentOptionsContainer, PaymentTitleContainer, PriceTotalBox, TitleLine, TotalContainer } from "./styles";
+import { AdressPaymentOrderContainer, AdressTitleContainer, BagForm, BoxCEP, BoxCity, BoxComplement, BoxDistrict, BoxError, BoxErrorCity, BoxErrorDistrict, BoxErrorNumber, BoxNumber, BoxState, BoxStreet, ConfirmOrderButton, Container, DistrictContainer, InputPaymentOptions, ItensAndFreight, LabelPaymentOptions, NumberContainer, OrderContainer, PaymentOptionsContainer, PaymentTitleContainer, PriceTotalBox, SpanError, SpanErrorPayment, TitleLine, TotalContainer } from "./styles";
 
 //Apollo
 import { gql, useMutation } from "@apollo/client";
@@ -53,7 +53,7 @@ const OrderFormValidationSchema = object({
   bairro: yup.string().required("Campo obrigatório"),
   cidade: yup.string().required("Campo obrigatório"),
   estado: yup.string().required("Campo obrigatório"),
-  payment: yup.string().required("Escolha uma opção de pagamento")
+  payment: yup.string().typeError("Escolha uma opção de pagamento").required("Escolha uma opção de pagamento")
 })
 
 //Mutation
@@ -180,43 +180,51 @@ function submitForm(info: CepObjectType) {
               </TitleLine>
             </AdressTitleContainer>
             <BoxCEP
-                type="text" 
-                placeholder="CEP"
-                {...register("cepForm")}
-                onBlur={onBlurCep}/>
-            <span>{errors?.cepForm?.message}</span>
+                  type="text" 
+                  placeholder="CEP"
+                  {...register("cepForm")}
+                  onBlur={onBlurCep}/>
+            <SpanError>{errors?.cepForm?.message}</SpanError>
             <BoxStreet  
                 type="text" 
                 placeholder="Rua"
                 {...register("logradouro")}/>
-            <span>{errors?.logradouro?.message}</span>
+            <SpanError>{errors?.logradouro?.message}</SpanError>
             <NumberContainer>
+            <BoxErrorNumber>
               <BoxNumber
                 type="number" 
                 placeholder="Número"
                   {...register("numero")}/>
-              <span>{errors?.numero?.message}</span>
+              <SpanError>{errors?.numero?.message}</SpanError>
+            </BoxErrorNumber>
               <BoxComplement 
                 type="text" 
                 placeholder="Complemento (Opcional)"
                 {...register("complemento")}/>
             </NumberContainer>
             <DistrictContainer>
-              <BoxDistrict 
-                type="text" 
-                placeholder="Bairro"
-                {...register("bairro")}/>
-              <span>{errors?.bairro?.message}</span>
-              <BoxCity
+              <BoxErrorDistrict>
+                <BoxDistrict 
+                  type="text" 
+                  placeholder="Bairro"
+                  {...register("bairro")}/>
+                <SpanError>{errors?.bairro?.message}</SpanError>
+              </BoxErrorDistrict>
+              <BoxErrorCity>
+                <BoxCity
                 type="text" 
                 placeholder="Cidade"
                 {...register("cidade")}/>
-              <span>{errors?.cidade?.message}</span>
-              <BoxState
-                type="text" 
-                placeholder="UF"
-                {...register("estado")}/>
-              <span>{errors?.estado?.message}</span>
+                <SpanError>{errors?.cidade?.message}</SpanError>
+              </BoxErrorCity>
+              <BoxError>
+                <BoxState
+                  type="text" 
+                  placeholder="UF"
+                  {...register("estado")}/>
+                <SpanError>{errors?.estado?.message}</SpanError>
+              </BoxError>
             </DistrictContainer>
           </Container>
           
@@ -257,7 +265,7 @@ function submitForm(info: CepObjectType) {
                 <p>DINHEIRO</p>
               </LabelPaymentOptions>
             </PaymentOptionsContainer>
-            <span>{errors?.payment?.message}</span>
+            <SpanErrorPayment>{errors?.payment?.message}</SpanErrorPayment>
           </Container>
 
         </AdressPaymentOrderContainer>

@@ -100,25 +100,34 @@ export const FormBox = styled.input`
   }
 `
 
+
 export const BoxCEP = styled(FormBox)`
   width: 20rem;
-  margin-bottom: 1.6rem;
 `
 
 export const BoxStreet = styled(FormBox)`
   width: 100%;
-  margin-bottom: 1.6rem;
+  margin-top: 1.6rem;
 `
 
 export const NumberContainer = styled.div`
   display: flex;
+
+  margin-top: 1.6rem;
+`
+
+export const BoxError = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+export const BoxErrorNumber = styled(BoxError)`
+  margin-right: 1.2rem;
+  margin-bottom: 1.6rem;
 `
 
 export const BoxNumber = styled(FormBox)`
   width: 20rem;
-
-  margin-right: 1.2rem;
-  margin-bottom: 1.6rem;
 
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
@@ -136,16 +145,22 @@ export const DistrictContainer = styled.div`
   display: flex; 
 `
 
+export const BoxErrorDistrict = styled(BoxError)`
+  margin-right: 1.2rem;
+`
+
 export const BoxDistrict = styled(FormBox)`
   width: 20rem;
+`
+
+export const BoxErrorCity = styled(BoxError)`
+  flex: 1;
 
   margin-right: 1.2rem;
 `
 
 export const BoxCity = styled(FormBox)`
-  flex: 1;
-
-  margin-right: 1.2rem;
+  
 `
 
 export const BoxState = styled(FormBox)`
@@ -278,3 +293,20 @@ export const ConfirmOrderButton = styled.button`
   }
 `
 
+export const SpanError = styled.span`
+  font-size: 1.2rem;
+  
+  color: ${props=>props.theme["yellow-dark"]};
+
+  margin-top: 0.5rem;
+  margin-left: 1rem;
+`
+
+export const SpanErrorPayment = styled.span`
+  font-size: 1.2rem;
+  
+  color: ${props=>props.theme["yellow-dark"]};
+
+  margin-top: 0.5rem;
+  margin-left: 2.5rem;
+`
