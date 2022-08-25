@@ -23,7 +23,7 @@ export function CoffeeSelection({item}:CoffeeSelectionType) {
 
   //Function Subtract Quantity in the Cart
   function handleSubtractQuantity(id: string) {
-    
+
     setContextCartOrders(prev => 
       
       prev.reduce((prevVal, element) => {

@@ -58,10 +58,12 @@ const OrderFormValidationSchema = object({
 
 //Mutation
 const CREATE_ORDER_MUTATION = gql`
-mutation CreateOrder ($cep: String!, $logradouro: String!, $bairro: String!, $cidade: String!, $estado: String!, $payment: String!, $numero: Int!, $name: String!, $quantity: Int!) {
+mutation CreateOrder ($cep: String!, $logradouro: String!, $bairro: String!, $cidade: String!, $estado: String!, $payment: String!, $numero: Int!, $coffeeBag: [CoffeeRequestCreateInput!]) {
   createOrder(
-    data: {cep: $cep, logradouro: $logradouro, bairro: $bairro, cidade: $cidade, estado: $estado, payment: $payment, numero: $numero, coffeeBag: {create: {name: $name, quantity: $quantity}}}
-  )
+    data: {cep: $cep, logradouro: $logradouro, bairro: $bairro, cidade: $cidade, estado: $estado, payment: $payment, numero: $numero, coffeeBag: {create: $coffeeBag}}
+  ) {
+    id
+  }
 }
 `
 
@@ -93,15 +95,11 @@ function submitForm(info: CepObjectType) {
         numero: info.numero, 
         complemento: info.complemento,
       
-        coffeeBag:
-          cartOrders.map((order)=>{
+        coffeeBag: cartOrders.map((order)=>{
             return {
-              coffeeRequest: {
-                name: order.tag,
-                quantity: order.quantity
-              }   
-
-            }
+              name: order.tag,
+              quantity: order.quantity
+            }   
         })
       }
 
